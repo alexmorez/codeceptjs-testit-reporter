@@ -1,6 +1,6 @@
 {
     "name": "codeceptjs-testit-reporter",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "Plugin for sending CodeceptJS test run reports to TestIT",
     "main": "dist/index.js",
     "types": "dist/types.d.ts",
@@ -10,10 +10,10 @@
     "scripts": {
         "test": "jest",
         "build": "tsc",
-        "lint": "eslint --max-warnings=0 ."
+        "lint": "eslint --max-warnings=0 .",
+        "prepare": "npm run build",
+        "prepublishOnly": "npm run test && npm run lint"
     },
-    "prepublishOnly": "npm run test && npm run lint",
-    "prepare": "npm run build",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/alexmorez/codeceptjs-testit-reporter.git"
