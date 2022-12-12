@@ -1,6 +1,7 @@
-import { event, recorder } from "codeceptjs"
+import { event, output, recorder } from "codeceptjs"
 
-import TestITAdapter from "./adapter"
+import TestITAdapter from "./Adapter"
+import { parseError } from "./utils"
 
 import type { CodeceptJsTest, TestITAdapterConfig } from "./types"
 
@@ -10,7 +11,7 @@ const Reporter = (config: TestITAdapterConfig) => {
     try {
         adapter = new TestITAdapter(config)
     } catch (e) {
-        console.log(e)
+        output.error(parseError(e))
         return
     }
 
@@ -33,7 +34,7 @@ const Reporter = (config: TestITAdapterConfig) => {
         recorder.add("[TestIT] Complete test", () => adapter.completeTest(test))
     })
 
-    event.dispatcher.on(event.step.started, adapter.initStep)
+    event.dispatcher.on(event.step.before, adapter.initStep)
     event.dispatcher.on(event.step.finished, adapter.completeStep)
     event.dispatcher.on(event.step.comment, adapter.handleStepComment)
 }

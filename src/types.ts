@@ -1,17 +1,3 @@
-export interface ErrorWithStack {
-    stack?: string
-}
-
-export interface OutputLogEntry {
-    line: string,
-    duration?: number,
-    status?: string,
-}
-
-export interface OutputConfig {
-    filterFn?: (s?: string) => boolean
-}
-
 export interface TestITAdapterConfig {
     url: string,
     configurationId: string,
@@ -24,12 +10,21 @@ export interface TestITAdapterConfig {
 // CodeceptJS types generated from JSDoc and sometimes incorrect, sometimes empty..
 export interface CodeceptJsTest extends Omit<Mocha.Test, 'artifacts'> {
     id: string,
-    err?: Error,  // to be honest, err is AssertionFailedError, but it is not typed
+    err?: Error,  // to be honest, err is AssertionFailedError, but it is not exported and not typed
     artifacts?: {
         screenshot: string
     }
 }
 
-export interface CodeceptJsStep extends CodeceptJS.Step {
-    started?: boolean
+export interface CodeceptJsMetaStep extends CodeceptJS.MetaStep {
+    id?: string
 }
+
+export interface CodeceptJsStep extends Omit<CodeceptJS.Step, 'metaStep'> {
+    id?: string
+    endTime?: number
+    startTime?: number
+    metaStep: CodeceptJsMetaStep
+}
+
+export type CodeceptJSOutput = typeof CodeceptJS.output & { print: (msg: string) => void }

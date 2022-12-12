@@ -6,7 +6,7 @@ export const TESTIT_STATUS = {
     PENDING: 'Pending',
     BLOCKED: 'Blocked',
     SKIPPED: 'Skipped',
-}
+} as { [key: string]: OutcomeType }
 
 export const CJS_STATUS = {
     PASSED: 'passed',
@@ -24,13 +24,13 @@ export const CJS_2_TESTIT_STATUS_MAP = {
     [CJS_STATUS.PASSED]: TESTIT_STATUS.PASSED,
     [CJS_STATUS.FAILED]: TESTIT_STATUS.FAILED,
     [CJS_STATUS.SKIPPED]: TESTIT_STATUS.SKIPPED,
-} as { [key: string]: OutcomeType }
+}
 
 export const CJS_2_TESTIT_STEP_STATUS_MAP = {
     [CJS_STEP_STATUS.SUCCESS]: TESTIT_STATUS.PASSED,
     [CJS_STEP_STATUS.FAILED]: TESTIT_STATUS.FAILED,
-} as { [key: string]: OutcomeType }
+}
 
 export const CJS_NAMESPACE = "CodeceptJS"
 
-export const STEP_INDENT = 4
+export const PLUGIN_NAME = "TestIT"

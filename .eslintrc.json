@@ -1,7 +1,8 @@
 {
     "env": {
         "node": true,
-        "es2021": true
+        "es2021": true,
+        "jest": true
     },
     "extends": [
         "eslint:recommended",
@@ -33,6 +34,7 @@
     },
     "ignorePatterns": ["node_modules", "dist"],
     "rules": {
+        "no-console": "warn",
         "no-empty": "warn",
         "comma-spacing": ["warn", { "before": false, "after": true }],
         "complexity": ["warn", 15],

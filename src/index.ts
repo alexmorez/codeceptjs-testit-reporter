@@ -1,3 +1,3 @@
-import Reporter from "./reporter"
+import Reporter from "./Reporter"
 
 module.exports = Reporter
