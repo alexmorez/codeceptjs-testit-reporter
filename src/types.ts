@@ -7,10 +7,20 @@ export interface TestITAdapterConfig {
     globalProjectId?: string,
 }
 
+export interface CodeceptJsAssertionFailedError extends Error {
+    params?: object,
+    template?: string
+    showDiff?: boolean,
+    actual?: string,
+    expected?: string,
+    inspect?: () => string,
+    cliMessage?: () => string,
+}
+
 // CodeceptJS types generated from JSDoc and sometimes incorrect, sometimes empty..
 export interface CodeceptJsTest extends Omit<Mocha.Test, 'artifacts'> {
-    id: string,
-    err?: Error,  // to be honest, err is AssertionFailedError, but it is not exported and not typed
+    uid?: string,
+    err?: CodeceptJsAssertionFailedError,
     artifacts?: {
         screenshot: string
     }

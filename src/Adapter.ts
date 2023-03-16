@@ -2,7 +2,7 @@ import { Attachment, Autotest, Client, ClientConfig } from "testit-api-client"
 
 import StepsProcessor from "./StepsProcessor"
 import { CJS_NAMESPACE } from "./constants"
-import { cjs2testItStatus, log, parseError } from "./utils"
+import { cjs2testItStatus, getTestId, log, parseError, parseTestError } from "./utils"
 
 import type { TestITAdapterConfig, CodeceptJsStep, CodeceptJsTest } from "./types"
 import type { AutotestPost, AutotestResultsForTestRun } from "testit-api-client"
@@ -81,7 +81,7 @@ class Adapter {
 
             const filteredResults: AutotestResultsForTestRun[] = []
             this.testRunResults.forEach(r => {
-                // Autotest created in TestIT only when test passed.
+                // Autotest creates in TestIT only when test passed.
                 // If test failed at first run, autotest will not exist,
                 // so we cannot load results for it.
                 if (existingTestsIds.has(r.autotestExternalId))
@@ -100,6 +100,16 @@ class Adapter {
         }
     }
 
+    forceCompleteTestRun = () => {
+        if (!this.testRunId)
+            return
+        log('Trying to force complete test run..')
+        this.client.completeTestRun(this.testRunId)
+            .catch(e => log(`Failed to force complete test run: ${ parseError(e) }`))
+            .finally(process.exit)
+        this.testRunId = null
+    }
+
     private _prepareTestRunLink() {
         if (
             !this.config.url ||
@@ -115,7 +125,7 @@ class Adapter {
         try {
             const autoTests = await this.client.getAutotest({
                 projectId: this.config.projectId,
-                externalId: test.id,
+                externalId: getTestId(test),
             })
             autoTest = autoTests[0]
         } catch (e) {
@@ -135,7 +145,7 @@ class Adapter {
     private _prepareAutoTestData = (test: CodeceptJsTest): AutotestPost => {
         return {
             projectId: this.config.projectId,
-            externalId: test.id,
+            externalId: getTestId(test),
             namespace: this.config.namespace,
             classname: test.parent?.title,
             name: test.title,
@@ -150,14 +160,14 @@ class Adapter {
     }
 
     initTest = (test: CodeceptJsTest) => {
-        this.testTimeMap[test.id] = new Date()
+        this.testTimeMap[getTestId(test)] = new Date()
     }
 
     completeTest = async (test: CodeceptJsTest) => {
         if (test.artifacts?.screenshot) {
             const attachment = await this._uploadAttachment(test.artifacts.screenshot)
             if (attachment?.id)
-                this.testAttachments[test.id] = attachment.id
+                this.testAttachments[getTestId(test)] = attachment.id
         }
 
         const testRunResult = this._prepareTestRunResult(test)
@@ -186,15 +196,15 @@ class Adapter {
         try {
             testRunResult = {
                 configurationId: this.config.configurationId,
-                autotestExternalId: test.id,
+                autotestExternalId: getTestId(test),
                 outcome: status,
                 duration: this._getTestDuration(test),
                 startedOn: this._getTestStartTime(test),
-                traces: test.err?.toString(),
+                traces: parseTestError(test),
                 stepResults: this.stepsProcessor.getStepResults(),
             }
-            if (this.testAttachments[test.id])
-                testRunResult.attachments = [{ id: this.testAttachments[test.id] }]
+            if (this.testAttachments[getTestId(test)])
+                testRunResult.attachments = [{ id: this.testAttachments[getTestId(test)] }]
         } catch (e) {
             log(`Failed to prepare test run result: ${ e?.toString() }`)
             return null
@@ -203,14 +213,14 @@ class Adapter {
     }
 
     private _getTestDuration = (test: CodeceptJsTest) => {
-        return this.testTimeMap[test.id]
-            ? Date.now() - this.testTimeMap[test.id].getTime()
+        return this.testTimeMap[getTestId(test)]
+            ? Date.now() - this.testTimeMap[getTestId(test)].getTime()
             : 0
     }
 
     private _getTestStartTime = (test: CodeceptJsTest) => {
-        return this.testTimeMap[test.id]
-            ? this.testTimeMap[test.id].toISOString()
+        return this.testTimeMap[getTestId(test)]
+            ? this.testTimeMap[getTestId(test)].toISOString()
             : undefined
     }
 

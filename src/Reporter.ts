@@ -1,6 +1,7 @@
 import { event, output, recorder } from "codeceptjs"
 
 import TestITAdapter from "./Adapter"
+import { FORCE_EXIT_SIGNALS } from "./constants"
 import { parseError } from "./utils"
 
 import type { CodeceptJsTest, TestITAdapterConfig } from "./types"
@@ -37,6 +38,8 @@ const Reporter = (config: TestITAdapterConfig) => {
     event.dispatcher.on(event.step.before, adapter.initStep)
     event.dispatcher.on(event.step.finished, adapter.completeStep)
     event.dispatcher.on(event.step.comment, adapter.handleStepComment)
+
+    FORCE_EXIT_SIGNALS.forEach(s => process.on(s, adapter.forceCompleteTestRun))
 }
 
 export default Reporter

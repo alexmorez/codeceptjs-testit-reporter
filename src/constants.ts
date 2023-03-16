@@ -34,3 +34,6 @@ export const CJS_2_TESTIT_STEP_STATUS_MAP = {
 export const CJS_NAMESPACE = "CodeceptJS"
 
 export const PLUGIN_NAME = "TestIT"
+
+// https://nodejs.org/api/process.html#process_signal_events
+export const FORCE_EXIT_SIGNALS = ['SIGHUP', 'SIGINT', 'SIGQUIT', 'SIGUSR1', 'SIGUSR2', 'SIGTERM']
