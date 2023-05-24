@@ -48,6 +48,12 @@ class Adapter {
                 `Invalid TestIT config, following properties are required: ${ emptyRequiredProps.join(", ") }`
             )
         this.client = new Client(testItClientConfig)
+
+        // axios default content-type for empty POST is "application/x-www-form-urlencoded",
+        // TestIT server rejects such requests with 415 status code starting from 4+ versions,
+        // so we can fix it changing defaults in TestIT client instance
+        // @ts-ignore
+        this.client.axios.defaults.headers.post['Content-Type'] = 'application/json'
     }
 
     initTestRun = async () => {

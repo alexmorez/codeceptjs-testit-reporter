@@ -9,7 +9,8 @@ import type { CodeceptJSOutput, CodeceptJsTest } from "./types"
 
 export const parseError = (e: unknown) =>
     axios.isAxiosError(e) && e.response
-        ? e.response.data
+        ? `Request failed with status code ${ e.response.status } (${ e.response.statusText }). ` +
+          `Payload: "${ e.response.data }"`
         : e instanceof Error
             ? e.toString()
             : 'Unknown error'

@@ -166,7 +166,6 @@ describe("StepsProcessor", () => {
             if (typeof step === "string") {
                 stepsProcessor.processComment(step)
             } else {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 stepsProcessor.processStep(step)
             }

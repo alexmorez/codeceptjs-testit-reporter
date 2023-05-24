@@ -80,6 +80,7 @@
                 "alphabetize": { "order": "asc" }
             }
         ],
-        "import/no-cycle": "warn"
+        "import/no-cycle": "warn",
+        "@typescript-eslint/ban-ts-comment": "off"
     }
 }
