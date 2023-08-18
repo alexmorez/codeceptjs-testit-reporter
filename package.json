@@ -1,6 +1,6 @@
 {
     "name": "codeceptjs-testit-reporter",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "description": "Plugin for sending CodeceptJS test run reports to TestIT",
     "main": "dist/index.js",
     "types": "dist/types.d.ts",

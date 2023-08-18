@@ -123,7 +123,7 @@ class Adapter {
             !this.testRunId
         )
             return null
-        return `${ this.config.url }/projects/${ this.config.globalProjectId }/autotests/test-runs/${ this.testRunId }`
+        return `${ this.config.url }/projects/${ this.config.globalProjectId }/test-runs/${ this.testRunId }`
     }
 
     initAutoTest = async (test: CodeceptJsTest) => {
